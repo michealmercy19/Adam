@@ -20,6 +20,7 @@ import AdminSettings from './components/pages/AdminSettings.jsx';
 import AdminComplaints from './components/pages/AdminComplaints.jsx';
 import HOCCourses from './components/pages/HOCCourses.jsx';
 import RoleGate from './components/common/RoleGate.jsx';
+import SplashScreen from './components/common/SplashScreen.jsx';
 
 const pageMap = {
   's-home': StudentHome,
@@ -43,7 +44,12 @@ const pageMap = {
 
 export default function App() {
   const { currentPage, roleSelected } = useContext(AppContext);
+  const [showSplash, setShowSplash] = React.useState(true);
   const PageComponent = pageMap[currentPage] || StudentHome;
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
 
   if (!roleSelected) {
     return <RoleGate />;

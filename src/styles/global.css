@@ -199,6 +199,101 @@ button, input, select {
   animation: splashLoad 1.3s ease-in-out infinite;
 }
 
+.launch-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #071326;
+  color: #fff;
+  transition: opacity 0.55s ease, visibility 0.55s ease;
+}
+
+.launch-splash.leaving {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.splash-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(141, 176, 255, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(141, 176, 255, 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at center, black, transparent 72%);
+  animation: gridDrift 8s linear infinite;
+}
+
+.launch-content {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  animation: launchRise 0.8s ease both;
+}
+
+.launch-mark {
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #9bb8ff;
+  border-radius: 28px;
+  color: #9bb8ff;
+  font-size: 52px;
+  font-weight: 950;
+  box-shadow: 0 0 0 14px rgba(141, 176, 255, 0.07), 0 18px 70px rgba(31, 81, 181, 0.35);
+  animation: markBreathe 1.8s ease-in-out infinite;
+}
+
+.launch-wordmark {
+  margin-top: 6px;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+}
+
+.launch-content p {
+  margin: 0;
+  color: #aebedb;
+  font-size: 15px;
+}
+
+.launch-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  color: #7590bd;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.launch-status span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #62d99a;
+  box-shadow: 0 0 12px #62d99a;
+  animation: statusBlink 1s ease-in-out infinite alternate;
+}
+
+.launch-footer {
+  position: absolute;
+  bottom: 28px;
+  color: #52698f;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@keyframes launchRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markBreathe { 50% { transform: scale(1.04); box-shadow: 0 0 0 20px rgba(141, 176, 255, 0.03), 0 18px 80px rgba(31, 81, 181, 0.45); } }
+@keyframes statusBlink { from { opacity: 0.45; } to { opacity: 1; } }
+@keyframes gridDrift { from { transform: scale(1); } to { transform: scale(1.08); } }
+
 @keyframes roleReveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes splashExit { to { opacity: 0; visibility: hidden; } }
 @keyframes splashPulse { to { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(141, 176, 255, 0.04); } }
@@ -1023,3 +1118,154 @@ th {
     width: 100px;
   }
 }
+
+.logo {
+  color: #111827;
+}
+
+.logo span,
+.role-gate-brand span,
+.launch-wordmark span {
+  color: var(--blue);
+}
+
+.role-gate {
+  background: #f5f7fb;
+  color: var(--ink);
+}
+
+.role-gate-inner::before {
+  border-color: rgba(23, 70, 209, 0.12);
+  box-shadow: 0 0 0 36px rgba(23, 70, 209, 0.04), 0 0 0 72px rgba(23, 70, 209, 0.025);
+}
+
+.role-gate-brand {
+  color: #111827;
+}
+
+.eyebrow {
+  color: var(--blue);
+}
+
+.role-gate-subtitle,
+.role-choice small {
+  color: var(--muted);
+}
+
+.role-choice {
+  border-color: var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.role-choice:hover,
+.role-choice.selected {
+  border-color: var(--blue);
+  background: #fff;
+}
+
+.role-choice-mark {
+  border-color: #b8c2d4;
+  color: #fff;
+}
+
+.role-choice.selected .role-choice-mark {
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+.launch-splash {
+  background: #f7f9fd;
+  color: var(--ink);
+}
+
+.splash-grid {
+  background-image: linear-gradient(rgba(23, 70, 209, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 70, 209, 0.06) 1px, transparent 1px);
+}
+
+.launch-mark {
+  border-color: var(--blue);
+  color: var(--blue);
+  box-shadow: 0 0 0 14px rgba(23, 70, 209, 0.07), 0 18px 70px rgba(31, 81, 181, 0.16);
+}
+
+.launch-wordmark {
+  color: #111827;
+}
+
+.launch-content p,
+.launch-status {
+  color: var(--muted);
+}
+
+.launch-footer {
+  color: #8995a8;
+}
+
+.launch-content {
+  gap: 12px;
+}
+
+.launch-mark {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 0 9px rgba(23, 70, 209, 0.08), 0 0 32px rgba(23, 70, 209, 0.35);
+  animation: launchBeacon 1.8s ease-in-out infinite;
+}
+
+.launch-mark span {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.launch-wordmark {
+  display: flex;
+  align-items: baseline;
+  overflow: hidden;
+  font-size: clamp(42px, 8vw, 76px);
+  letter-spacing: 0.12em;
+  line-height: 0.95;
+}
+
+.launch-wordmark .launch-a {
+  display: inline-block;
+  color: var(--blue);
+  animation: letterFromLeft 1.15s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.launch-wordmark .launch-dam {
+  display: inline-block;
+  color: #111827;
+  animation: letterFromRight 1.15s 0.08s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.launch-wordmark::after {
+  content: '';
+  position: absolute;
+  width: 55px;
+  height: 130px;
+  background: rgba(255, 255, 255, 0.65);
+  transform: translateX(-160px) skewX(-18deg);
+  animation: logoSweep 1s 0.85s ease-out both;
+  pointer-events: none;
+}
+
+.launch-content p {
+  animation: textReveal 0.8s 0.8s ease both;
+}
+
+.launch-status {
+  animation: textReveal 0.8s 1s ease both;
+}
+
+@keyframes letterFromLeft { from { opacity: 0; transform: translateX(-130px); } 65% { opacity: 1; transform: translateX(9px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes letterFromRight { from { opacity: 0; transform: translateX(130px); } 65% { opacity: 1; transform: translateX(-9px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes logoSweep { from { opacity: 0; } 25% { opacity: 1; } to { opacity: 0; transform: translateX(360px) skewX(-18deg); } }
+@keyframes textReveal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes launchBeacon { 50% { transform: scale(1.35); box-shadow: 0 0 0 15px rgba(23, 70, 209, 0.04), 0 0 42px rgba(23, 70, 209, 0.3); } }

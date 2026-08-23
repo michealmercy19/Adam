@@ -44,7 +44,7 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <div className="logo">ADAM</div>
+      <div className="logo"><span>A</span>DAM</div>
       <div className="rolebox">
         <small>Prototype role</small>
         <select value={currentRole} onChange={handleRoleChange}>

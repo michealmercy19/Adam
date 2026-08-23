@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AppContext } from '../../context/AppContext.jsx';
 import { Badge, Button, Card } from './UI.jsx';
 
@@ -12,12 +12,6 @@ const roles = [
 export default function RoleGate() {
   const { setCurrentRole, setCurrentPage, setRoleSelected } = useContext(AppContext);
   const [selectedRole, setSelectedRole] = useState('student');
-  const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    const splashTimer = setTimeout(() => setShowSplash(false), 1800);
-    return () => clearTimeout(splashTimer);
-  }, []);
 
   const enterApp = () => {
     setCurrentRole(selectedRole);
@@ -27,16 +21,8 @@ export default function RoleGate() {
 
   return (
     <main className="role-gate">
-      {showSplash && (
-        <section className="splash-screen" aria-label="ADAM loading">
-          <div className="splash-mark">A</div>
-          <div className="role-gate-brand splash-brand">ADAM</div>
-          <p>Attendance, connected.</p>
-          <div className="splash-loader"><span></span></div>
-        </section>
-      )}
       <div className="role-gate-inner">
-        <div className="role-gate-brand">ADAM</div>
+        <div className="role-gate-brand"><span>A</span>DAM</div>
         <p className="eyebrow">Your academic workspace</p>
         <h1>Which role describes you best?</h1>
         <p className="role-gate-subtitle">Pick a role to connect course selection, teaching assignments, and attendance in one place.</p>
