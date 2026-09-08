@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Badge, Pill, Card } from '../common/UI.jsx';
+import { AppContext } from '../../context/AppContext.jsx';
+
+const fallbackStudentId = '202*****';
 
 export default function StudentHistory() {
+  const { userProfile, attendanceRecords } = useContext(AppContext);
+  const records = attendanceRecords.filter((record) => record.studentId === (userProfile?.id || fallbackStudentId));
+
   return (
     <>
       <div className="top">
@@ -12,20 +18,15 @@ export default function StudentHistory() {
       </div>
 
       <Card>
-        <div className="course">
-          <div>
-            <b>ICT 201</b>
-            <div className="muted">18 Aug · 10:04 AM</div>
+        {records.length ? records.map((record) => (
+          <div className="course" key={record.id}>
+            <div>
+              <b>{record.courseCode}</b>
+              <div className="muted">{record.classDate} · {record.clockInTime || 'No clock-in time'}</div>
+            </div>
+            <Badge text={record.status} type={record.status === 'Present' || record.status === 'Completed' ? 'good' : 'pending'} />
           </div>
-          <Badge text="On Time" type="good" />
-        </div>
-        <div className="course">
-          <div>
-            <b>ICT 203</b>
-            <div className="muted">17 Aug · 12:09 PM</div>
-          </div>
-          <Badge text="Late" type="pending" />
-        </div>
+        )) : <p className="muted">No attendance history yet. Your verified clock-ins will appear here.</p>}
       </Card>
     </>
   );

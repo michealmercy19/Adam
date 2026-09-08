@@ -4,11 +4,10 @@ import { Badge, Pill, Card, Button } from '../common/UI.jsx';
 
 const lecturerId = 'lecturer-001';
 const lecturerName = 'Dr. Adewale James';
-const lecturerDepartment = 'Information Technology';
-
 export default function LecturerClasses() {
-  const { courseOfferings, lecturerAssignments, setLecturerAssignments, setCurrentPage } = useContext(AppContext);
+  const { userProfile, courseOfferings, lecturerAssignments, setLecturerAssignments, setCurrentPage } = useContext(AppContext);
   const [message, setMessage] = useState('');
+  const lecturerDepartment = userProfile?.department || '';
   const availableCourses = useMemo(
     () => courseOfferings.filter((course) => course.linkedDepartments?.includes(lecturerDepartment) && course.verified),
     [courseOfferings],

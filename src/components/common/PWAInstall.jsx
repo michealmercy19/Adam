@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 export default function PWAInstall() {
   const [installPrompt, setInstallPrompt] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isIos, setIsIos] = useState(false);
 
   useEffect(() => {
+    setIsIos(/iphone|ipad|ipod/i.test(window.navigator.userAgent) && !window.navigator.standalone);
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
       setInstallPrompt(event);
@@ -31,12 +33,13 @@ export default function PWAInstall() {
     setInstallPrompt(null);
   };
 
-  if (!isVisible) return null;
+  if (!isVisible && !isIos) return null;
 
   return (
     <div className="install-banner">
-      <span>Install ADAM App</span>
-      <button onClick={handleInstall}>Install</button>
+      <span>{isIos ? 'Install ADAM: tap Share, then Add to Home Screen' : 'Install ADAM App'}</span>
+      {!isIos && <button onClick={handleInstall}>Install</button>}
+      {isIos && <button type="button" onClick={() => setIsIos(false)} aria-label="Dismiss install instructions">Dismiss</button>}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Pill, Card, Button } from '../common/UI.jsx';
 import { AppContext } from '../../context/AppContext.jsx';
 
 export default function LecturerAttendance() {
-  const { courseOfferings, lecturerAssignments, activeClass } = useContext(AppContext);
+  const { courseOfferings, lecturerAssignments, activeClass, setActiveClass } = useContext(AppContext);
   const assignedIds = lecturerAssignments['lecturer-001'] || [];
   const activeCourse = courseOfferings.find((course) => course.id === (activeClass?.courseId || assignedIds[0]));
   const activeCourseLabel = activeCourse ? `${activeCourse.code} — ${activeCourse.title}` : activeClass?.courseCode || 'No course selected';
@@ -19,6 +19,9 @@ export default function LecturerAttendance() {
   };
 
   const handleEndSession = () => {
+    if (activeClass) {
+      setActiveClass((current) => ({ ...current, status: 'stopped', completedAt: new Date().toISOString() }));
+    }
     alert('Attendance ended. Report is ready.');
   };
 
@@ -33,12 +36,12 @@ export default function LecturerAttendance() {
       </div>
 
       <div className="notice">
-        The lecturer controls the On-Time and Late windows. The total session cannot exceed 35 minutes. Co-lecturers assigned to this course see the same session.
+        {activeClass ? `${activeClass.hostName || 'Lecturer'} is hosting ${activeClass.mode === 'physical' ? 'a physical class' : 'a virtual attendance session'} at ${activeClass.venue || 'the assigned venue'}. Students must verify against this session to be marked present.` : 'No active class is currently being hosted.'}
       </div>
 
       <div className="two section">
         <Card>
-          <h3>Live verification</h3>
+          <h3>Session verification</h3>
           <div className="scanbox">
             <div className="face"></div>
             <div className="scanline"></div>
@@ -51,6 +54,7 @@ export default function LecturerAttendance() {
               Simulate Late
             </Button>
           </div>
+          <p className="muted">Verification method: {activeClass?.requiresBiometric ? 'Face verification + attendance session' : 'Session + proximity check'}</p>
         </Card>
 
         <Card>
@@ -71,6 +75,10 @@ export default function LecturerAttendance() {
           <div className="statline">
             <span>Absent</span>
             <b>8</b>
+          </div>
+          <div className="statline">
+            <span>Mode</span>
+            <b>{activeClass?.mode === 'physical' ? 'Physical' : 'Virtual'}</b>
           </div>
           <Button type="danger" onClick={handleEndSession} disabled={!activeCourse && !activeClass?.courseCode}>
             End Session

@@ -3,36 +3,52 @@ import { Pill, Card, Button } from '../common/UI.jsx';
 import { AppContext } from '../../context/AppContext.jsx';
 
 export default function LecturerHost() {
-  const { courseOfferings, lecturerAssignments, setCurrentPage, setActiveClass } = useContext(AppContext);
+  const { userProfile, courseOfferings, lecturerAssignments, setCurrentPage, setActiveClass } = useContext(AppContext);
   const assignedIds = lecturerAssignments['lecturer-001'] || [];
-  const assignedCourses = courseOfferings.filter((item) => assignedIds.includes(item.id));
+  const assignedCourses = courseOfferings.filter((item) => assignedIds.includes(item.id) && item.linkedDepartments?.includes(userProfile?.department));
   const [level, setLevel] = useState('All levels');
-  const [department, setDepartment] = useState('All departments');
+  const department = userProfile?.department || '';
   const [courseId, setCourseId] = useState(assignedIds[0] || '');
   const [manualCode, setManualCode] = useState('');
   const [room, setRoom] = useState('');
-  const [onTime, setOnTime] = useState('10');
-  const [late, setLate] = useState('5');
+  const [durationMinutes, setDurationMinutes] = useState('15');
   const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleTime, setScheduleTime] = useState('');
   const [scheduleRoom, setScheduleRoom] = useState('');
 
   const filteredCourses = assignedCourses.filter((item) => (
     (level === 'All levels' || (item.level || '200 Level') === level) &&
-    (department === 'All departments' || item.department === department)
+    item.department === department
   ));
   const manualCourse = courseOfferings.find((item) => item.code.toLowerCase() === manualCode.trim().toLowerCase());
   const selectedCourse = manualCourse || assignedCourses.find((item) => item.id === Number(courseId));
 
   const openClass = (mode, date = '', time = '', venue = room) => {
-    setActiveClass({ courseId: selectedCourse?.id || null, courseCode: selectedCourse?.code || manualCode.trim().toUpperCase(), courseTitle: selectedCourse?.title || 'Manual course', mode, venue, date, time, startedAt: new Date().toISOString() });
+    const totalMinutes = Number(durationMinutes) || 15;
+    const endsAt = new Date(Date.now() + totalMinutes * 60000).toISOString();
+
+    setActiveClass({
+      courseId: selectedCourse?.id || null,
+      courseCode: selectedCourse?.code || manualCode.trim().toUpperCase(),
+      courseTitle: selectedCourse?.title || 'Manual course',
+      mode: mode === 'walk-in' ? 'physical' : mode === 'scheduled' ? 'physical' : 'virtual',
+      venue,
+      date,
+      time,
+      startedAt: new Date().toISOString(),
+      endsAt,
+      durationMinutes: totalMinutes,
+      sessionId: `session-${Date.now()}`,
+      requiresBiometric: true,
+      hostType: 'lecturer',
+      hostName: 'Dr. Adewale James',
+    });
     setCurrentPage('l-attendance');
   };
 
   const handleStartWalkIn = () => {
-    const total = parseInt(onTime) + parseInt(late);
-    if (total > 35) {
-      alert('Maximum total attendance time is 35 minutes.');
+    if (Number(durationMinutes) <= 0 || Number(durationMinutes) > 180) {
+      alert('Attendance duration must be between 1 and 180 minutes.');
       return;
     }
     if (!selectedCourse && !manualCode.trim()) return;
@@ -52,15 +68,16 @@ export default function LecturerHost() {
           <h1>Host / Schedule</h1>
           <p>Simple class setup</p>
         </div>
-        <Pill text="Max 35 min" />
+        <Pill text="Live timer" />
       </div>
 
       <div className="two">
         <Card>
-          <h3>Walk-in class</h3>
+          <h3>Host attendance session</h3>
+          <p className="muted">The lecturer or HOC starts the session and students clock in against that class only.</p>
           <div className="formgrid">
             <div className="field"><label>Level</label><select value={level} onChange={(e) => setLevel(e.target.value)}><option>All levels</option><option>100 Level</option><option>200 Level</option><option>300 Level</option><option>400 Level</option></select></div>
-            <div className="field"><label>Department</label><select value={department} onChange={(e) => setDepartment(e.target.value)}><option>All departments</option><option>Information Technology</option><option>Computer Science</option></select></div>
+            <div className="field"><label>Department</label><input value={department} readOnly /></div>
           </div>
           <div className="field">
             <label>Course</label>
@@ -78,28 +95,16 @@ export default function LecturerHost() {
               onChange={(e) => setRoom(e.target.value)}
             />
           </div>
-          <div className="formgrid">
-            <div className="field">
-              <label>On Time</label>
-              <select value={onTime} onChange={(e) => setOnTime(e.target.value)}>
-                <option>5</option>
-                <option>10</option>
-                <option>15</option>
-                <option>20</option>
-              </select>
-            </div>
-            <div className="field">
-              <label>Late</label>
-              <select value={late} onChange={(e) => setLate(e.target.value)}>
-                <option>5</option>
-                <option>10</option>
-                <option>15</option>
-                <option>20</option>
-              </select>
-            </div>
-          </div>
-          <div className="notice">
-            Choose the two windows. ADAM calculates the total and blocks anything above 35 minutes.
+          <div className="field">
+            <label>Attendance duration (minutes)</label>
+            <input
+              type="number"
+              min="1"
+              max="180"
+              placeholder="15"
+              value={durationMinutes}
+              onChange={(e) => setDurationMinutes(e.target.value)}
+            />
           </div>
           <Button type="primary" onClick={handleStartWalkIn} disabled={(!selectedCourse && !manualCode.trim()) || !room.trim()}>
             Start Walk-in
